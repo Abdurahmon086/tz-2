@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 import { apiService } from "./api";
@@ -33,7 +33,11 @@ export const requestFirebaseToken = async (userId: number) => {
       });
     }
     await navigator.serviceWorker.ready;
-
+    
+    if (!messaging) {
+      console.error("Firebase messaging is not available in this environment");
+      return null;
+    }
     const token = await getToken(messaging, {
       vapidKey: "BND5ym5-wvp3EIYvvOpdiDxDle9Wbp3mZhlqZvEwjSSxIPzWZ-MIFN61skPhmUVTRHkBjfBj7AkahbYDDNP9arU",
       serviceWorkerRegistration: registration,

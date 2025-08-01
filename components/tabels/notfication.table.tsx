@@ -54,8 +54,8 @@ export function NotificationTable({ data, onMarkAsRead }: NotificationTableProps
         accessorKey: "isRead",
         header: "Mark as Read",
         cell: ({ row }) => {
-          const id = row.getValue("id");
-          const isRead = row.getValue("isRead");
+          const id = row.getValue("id") as string;
+          const isRead = row.getValue("isRead") as boolean;
           return (
             <Button variant={isRead ? "secondary" : "outline"} size="sm" disabled={isRead} onClick={() => onMarkAsRead(id)}>
               {isRead ? "Read" : "Mark as Read"}
