@@ -1,11 +1,25 @@
 "use client";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { apiService } from "@/services/api";
@@ -16,6 +30,8 @@ const formSchema = z.object({
 });
 
 function MessageDialog({ id }: { id: number }) {
+  const [open, setOpen] = useState(false); // Dialog holati
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,8 +43,9 @@ function MessageDialog({ id }: { id: number }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await apiService.sendNotification(values.title, values.body, id);
-      if (res.status == "OK") {
+      if (res.status === "OK") {
         form.reset();
+        setOpen(false); // Dialogni yopish
         alert("Message sent successfully");
       }
     } catch (err) {
@@ -38,8 +55,10 @@ function MessageDialog({ id }: { id: number }) {
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger className="ml-2 cursor-pointer transition-colors">Send message</DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="ml-2">Send message</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Send message for user</DialogTitle>
