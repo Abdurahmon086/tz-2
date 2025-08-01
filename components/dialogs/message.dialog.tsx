@@ -29,6 +29,7 @@ function MessageDialog({ id }: { id: number }) {
       const res = await apiService.sendNotification(values.title, values.body, id);
       if (res.status == "OK") {
         form.reset();
+        alert("Message sent successfully");
       }
     } catch (err) {
       console.log(err);
